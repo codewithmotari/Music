@@ -1,57 +1,42 @@
 package com.carapase.Music.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import java.util.Set;
 
 
 @Entity
-
+@NoArgsConstructor
+@AllArgsConstructor
 public class Music {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter @Setter
     private int id;
+    @Getter @Setter
     private String name;
-    private Artist artist=new Artist();
+    @ManyToMany
+    @JoinTable(name = "music_artists",
+            joinColumns = @JoinColumn(name = "music_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "id"))
+    @Getter @Setter
+    private Set<Artist> artists;
+    @Getter @Setter
     private double duration;
+    @Getter @Setter
     private Genre music_genre;
+    @Lob @Getter @Setter
+    private byte[] audio;
 
-    enum Genre{
+    enum Genre {
         POP,
         REGGEA,
         BONGO
     }
-    
-    public Music(){}
 
-    public Music(String name,Artist artist,double duration ,Genre genre){
-        this.name=name;
-        this.artist=artist;
-        this.duration=duration;
-        this.music_genre=genre;
-    }
-    public void setArtist(Artist artist){
-        this.artist=artist;
-    }
-    public Artist getArtist(){
-        return artist;
-    }
-
-        public void setDuration(double duration){
-        this.duration=duration;
-    }
-    public double getDuration(){
-        return duration;
-    }
-
-    public void setGenre(Genre genre){
-        this.music_genre=genre;
-    }
-    public Genre getGenre(){
-        return music_genre;
-    }
-    
 }
